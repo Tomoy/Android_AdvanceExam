@@ -15,9 +15,7 @@ import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.tomasm.madridshops.Manifest
 import com.tomasm.madridshops.Navigator
 
@@ -28,9 +26,10 @@ import madridshops.tomasm.com.domain.interactor.ErrorCompletion
 import madridshops.tomasm.com.domain.interactor.SuccessCompletion
 import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteractor
 import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteractorImplementation
+import madridshops.tomasm.com.domain.model.Shop
 import madridshops.tomasm.com.domain.model.Shops
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
 
     var listFragment: ListFragment? = null
 
@@ -118,13 +117,23 @@ class MainActivity : AppCompatActivity() {
         for (i in 0 until shops.count()) {
             val shop = shops.get(i)
 
-            addPin(map!!, shop.lat, shop.lon, shop.name)
+            addPin(map!!, shop)
         }
     }
 
-    fun addPin(map: GoogleMap, latitude: Double, longitude: Double, title: String) {
-        map.addMarker(MarkerOptions().position(LatLng(latitude, longitude)).title(title))
+    fun addPin(map: GoogleMap, shop: Shop) {
+        val marker = map.addMarker(MarkerOptions().position(LatLng(shop.lat, shop.lon)).title(shop.name))
+        marker.tag = shop
+        map.setOnInfoWindowClickListener(this)
     }
+
+    //Delegate method from InfoWindowListener
+    override fun onInfoWindowClick(marker: Marker?) {
+        val selectedShop = marker!!.tag as Shop
+        Navigator().navigateFromMainActivityToDetailActivity(this)
+        Log.d("MarkerClick", "Click on marker shop: " + selectedShop.name)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -1,6 +1,7 @@
 package com.tomasm.madridshops
 
 import android.content.Intent
+import com.tomasm.madridshops.activity.DetailActivity
 import com.tomasm.madridshops.activity.MainActivity
 import com.tomasm.madridshops.activity.PicassoActivity
 
@@ -9,6 +10,9 @@ class Navigator {
 
     fun navigateFromMainActivityToPicassoActivity(main: MainActivity) {
         main.startActivity(Intent(main, PicassoActivity::class.java))
+    }
 
+    fun navigateFromMainActivityToDetailActivity(main: MainActivity) {
+        main.startActivity(Intent(main, DetailActivity::class.java))
     }
 }
