@@ -1,6 +1,8 @@
 package madridshops.tomasm.com.domain.model
 
-data class Shop(val id: Int, val name: String, val address: String)
+data class Shop(val id: Int, val name: String, val address: String,
+                val description: String, val lat: Double, val lon: Double, val imgUrl:String,
+                val logoImgUrl: String, val openingHours: String)
 
 data class Shops(var shops: MutableList<Shop>): AggregateInterface<Shop> {
 

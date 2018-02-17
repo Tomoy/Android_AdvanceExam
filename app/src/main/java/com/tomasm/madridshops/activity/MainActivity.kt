@@ -117,8 +117,8 @@ class MainActivity : AppCompatActivity() {
     fun addAllShopPins(shops: Shops) {
         for (i in 0 until shops.count()) {
             val shop = shops.get(i)
-            //TODO : Agregar al modelo latitud y longitud para mapearlo desde el ShopEntity
-            addPin(map!!, 40.416775, -3.703790, shop.name)
+
+            addPin(map!!, shop.lat, shop.lon, shop.name)
         }
     }
 

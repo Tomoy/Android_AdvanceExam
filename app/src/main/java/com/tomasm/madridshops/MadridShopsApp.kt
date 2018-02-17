@@ -3,9 +3,7 @@ package com.tomasm.madridshops
 import android.support.multidex.MultiDexApplication
 import android.util.Log
 import madridshops.tomasm.com.domain.interactor.ErrorCompletion
-import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteractorFakeImplementation
 import madridshops.tomasm.com.domain.interactor.SuccessCompletion
-import madridshops.tomasm.com.domain.interactor.deleteAllShops.DeleteAllShopsImplementation
 import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteractorImplementation
 import madridshops.tomasm.com.domain.model.Shops
 

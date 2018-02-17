@@ -1,6 +1,7 @@
 package madridshops.tomasm.com.domain.interactor.getAllShops
 
 import android.content.Context
+import android.util.Log
 import madridshops.tomasm.com.domain.interactor.ErrorCompletion
 import madridshops.tomasm.com.domain.interactor.SuccessCompletion
 import madridshops.tomasm.com.domain.model.Shop
@@ -26,14 +27,38 @@ class GetAllShopsInteractorImplementation(context: Context) : GetAllShopsInterac
     }
 
     private fun mapEntityToShops(list: List<ShopEntity>): Shops {
+
         val tempList = ArrayList<Shop>()
         list.forEach {
-            val shop = Shop(it.id.toInt(), it.name, it.address)
-            tempList.add(shop)
+
+            var shopLat:Double
+            var shopLong:Double
+
+            try {
+
+                shopLat = it.latitude.toDouble()
+                shopLong = it.longitude.toDouble()
+
+                val shop = Shop(
+                        it.id.toInt(),
+                        it.name,
+                        it.address,
+                        it.description,
+                        shopLat,
+                        shopLong,
+                        it.img,
+                        it.logo_img,
+                        it.opening_hours_en
+                )
+                tempList.add(shop)
+
+            }catch(e:NumberFormatException) {
+                Log.d("MapError", "There was an error mapping shop long or lat, ignoring it")
+            }
+
         }
 
-        val shops = Shops(tempList)
-        return shops
+        return Shops(tempList)
     }
 }
 

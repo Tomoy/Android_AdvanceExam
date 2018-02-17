@@ -1,6 +1,7 @@
 package madridshops.tomasm.com.repository
 
 import android.content.Context
+import android.util.Log
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import madridshops.tomasm.com.repository.cache.Cache
 import madridshops.tomasm.com.repository.cache.CacheImplementation
@@ -39,6 +40,7 @@ class RepositoryImplementation(context: Context): Repository {
 
                 try {
                     responseEntity = parser.parse<ShopsResponseEntity>(e)
+                    Log.d("ShopEntity", "Nadaaaa")
                 } catch (e: InvalidFormatException) {
                     error("Error parsing JSON")
                     return
