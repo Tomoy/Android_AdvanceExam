@@ -3,7 +3,6 @@ package com.tomasm.madridshops.activity
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -12,11 +11,9 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.tomasm.madridshops.Manifest
 import com.tomasm.madridshops.Navigator
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,6 +25,8 @@ import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteracto
 import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteractorImplementation
 import madridshops.tomasm.com.domain.model.Shop
 import madridshops.tomasm.com.domain.model.Shops
+import com.tomasm.madridshops.common.Map
+
 
 class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
 
@@ -63,44 +62,21 @@ class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
 
 
     }
+    private var map: GoogleMap? = null
 
     private fun initializeMap(shops: Shops) {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync({ mapa: GoogleMap? ->
             Log.d("SUCCESS", "Habemus MAPA")
-            centerMapInPosition(mapa!!, 40.416775, -3.703790)
+            Map().centerMapInPosition(mapa!!, 40.416775, -3.703790, 13f)
             mapa!!.uiSettings.isRotateGesturesEnabled = false
             mapa!!.uiSettings.isZoomControlsEnabled = true
-            showUserPosition(baseContext, mapa!!) //baseContext porque estamos dentro de una clausura y no tenemos acceso al context como this
+            Map().showUserPosition(baseContext, mapa!!, this) //baseContext porque estamos dentro de una clausura y no tenemos acceso al context como this
             map = mapa
             addAllShopPins(shops)
         })
     }
 
-    fun centerMapInPosition(map: GoogleMap, latitude: Double, longitude: Double) {
-        val centerPoint = LatLng(latitude, longitude)
-        val cameraPosition = CameraPosition.Builder().
-                target(centerPoint).
-                zoom(13f).
-                build()
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-    }
-
-    fun showUserPosition(context: Context, map: GoogleMap) {
-        //Necesitamos pedirle permiso al usuario para saber su location
-        if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION),
-                    10)
-            //TODO :Mostrar mensaje al usuario de que necesitamos los permisos para mostrar su ubicación
-            return
-        }
-    }
-
-    private var map: GoogleMap? = null
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -130,7 +106,7 @@ class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
     //Delegate method from InfoWindowListener
     override fun onInfoWindowClick(marker: Marker?) {
         val selectedShop = marker!!.tag as Shop
-        Navigator().navigateFromMainActivityToDetailActivity(this)
+        Navigator().navigateFromMainActivityToDetailActivity(this, selectedShop)
         Log.d("MarkerClick", "Click on marker shop: " + selectedShop.name)
     }
 

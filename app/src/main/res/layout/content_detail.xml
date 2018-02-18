@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.tomasm.madridshops.activity.DetailActivity"
-    tools:showIn="@layout/activity_detail">
+    tools:showIn="@layout/activity_detail"
+    android:orientation="vertical"
+    >
 
-</android.support.constraint.ConstraintLayout>
+    <fragment
+        android:id="@+id/detail_map_fragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_weight="1"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+
+        <RelativeLayout
+            android:id="@+id/container_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:id="@+id/shop_name_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="@dimen/font_size_big"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/big_margin"
+                android:layout_alignParentTop="true"
+                tools:text="@string/shop_name_default"/>
+
+            <TextView
+                android:id="@+id/shop_description_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="@dimen/font_size_medium"
+                android:layout_below="@id/shop_name_textView"
+                android:layout_marginTop="@dimen/small_margin"
+                tools:text="@string/shop_description_default"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/shop_address_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/font_size_medium"
+        android:layout_marginTop="@dimen/small_margin"
+        android:textStyle="italic"
+        tools:text="@string/shop_address_default"/>
+
+</LinearLayout>
