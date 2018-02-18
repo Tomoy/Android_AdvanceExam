@@ -19,9 +19,8 @@
         android:background="@color/colorPrimary"
         android:layout_weight="1"/>
 
-    <fragment
+    <FrameLayout
         android:id="@+id/list_fragment"
-        android:name="com.tomasm.madridshops.fragment.ListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorAccent"

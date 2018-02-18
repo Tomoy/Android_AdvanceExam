@@ -1,24 +1,18 @@
 package com.tomasm.madridshops.activity
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.squareup.picasso.Picasso
 import com.tomasm.madridshops.Navigator
 
 import kotlinx.android.synthetic.main.activity_main.*
 import com.tomasm.madridshops.R
-import com.tomasm.madridshops.fragment.ListFragment
 import madridshops.tomasm.com.domain.interactor.ErrorCompletion
 import madridshops.tomasm.com.domain.interactor.SuccessCompletion
 import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteractor
@@ -26,29 +20,30 @@ import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteracto
 import madridshops.tomasm.com.domain.model.Shop
 import madridshops.tomasm.com.domain.model.Shops
 import com.tomasm.madridshops.common.Map
+import com.tomasm.madridshops.fragment.ShopListFragment
 
 
-class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
-
-    var listFragment: ListFragment? = null
+class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener, ShopListFragment.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        Log.d( "App", "OnCreate MainActivity")
+        //Picasso setup
+        Picasso.with(this).setIndicatorsEnabled(false) //Muestra un indicador rojo cuando la imagen no estaba en cache y verde cuando lee de cache
+        Picasso.with(this).isLoggingEnabled = true  //Logea lo que Picasso va haciendo
 
         setupMap()
-        listFragment = supportFragmentManager.findFragmentById(R.id.list_fragment) as ListFragment
-
     }
 
     fun setupMap() {
         val getAllShopsInteractor: GetAllShopsInteractor = GetAllShopsInteractorImplementation(this)
         getAllShopsInteractor.execute(success = object: SuccessCompletion<Shops> {
             override fun successCompletion(shops: Shops) {
+
                 initializeMap(shops)
+                loadListFragment(shops)
             }
 
         },error = object: ErrorCompletion {
@@ -62,6 +57,21 @@ class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
 
 
     }
+
+    fun loadListFragment(shops: Shops) {
+
+        if (findViewById<View>(R.id.list_fragment) != null) {
+            //Comprobar primero que no fue añadido previamente porque sino se va a añadir cada vez que la actividad se recargue
+            if (fragmentManager.findFragmentById(R.id.list_fragment) == null) {
+                //Añadir fragment en Activity
+                val fragment = ShopListFragment.newInstance(shops)
+                fragmentManager.beginTransaction()
+                        .add(R.id.list_fragment, fragment)
+                        .commit()
+            }
+        }
+    }
+
     private var map: GoogleMap? = null
 
     private fun initializeMap(shops: Shops) {
@@ -110,18 +120,8 @@ class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener {
         Log.d("MarkerClick", "Click on marker shop: " + selectedShop.name)
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Navigator().navigateFromMainActivityToPicassoActivity(this)
-        return true
+    //ItemSelected from Fragmentlist
+    override fun onItemSelected(item: Shop, position: Int) {
+        Navigator().navigateFromMainActivityToDetailActivity(this,item)
     }
 }

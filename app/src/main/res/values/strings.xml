@@ -9,4 +9,5 @@
     <string name="shop_name_default">Shop Name</string>
     <string name="shop_description_default">This is a test description of the shop, just some text to test the size of the textview</string>
     <string name="shop_address_default">Avenida Siempre Viva 123</string>
+    <string name="logo_image_description">Item logo image</string>
 </resources>
