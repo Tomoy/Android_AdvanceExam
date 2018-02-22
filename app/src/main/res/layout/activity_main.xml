@@ -20,6 +20,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <!--<include layout="@layout/content_main" />-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/small_margin"
+        tools:context=".activity.MainActivity">
+
+        <FrameLayout
+            android:id="@+id/fragment_sections_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

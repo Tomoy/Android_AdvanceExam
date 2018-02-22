@@ -20,6 +20,7 @@ import madridshops.tomasm.com.domain.interactor.getAllShops.GetAllShopsInteracto
 import madridshops.tomasm.com.domain.model.Shop
 import madridshops.tomasm.com.domain.model.Shops
 import com.tomasm.madridshops.common.Map
+import com.tomasm.madridshops.fragment.ShopActivityPagerFragment
 import com.tomasm.madridshops.fragment.ShopListFragment
 
 
@@ -34,7 +35,15 @@ class MainActivity : AppCompatActivity(), GoogleMap.OnInfoWindowClickListener, S
         Picasso.with(this).setIndicatorsEnabled(false) //Muestra un indicador rojo cuando la imagen no estaba en cache y verde cuando lee de cache
         Picasso.with(this).isLoggingEnabled = true  //Logea lo que Picasso va haciendo
 
-        setupMap()
+        //setupMap()
+        if (findViewById<View>(R.id.fragment_sections_pager) != null) {
+            if (fragmentManager.findFragmentById(R.id.fragment_sections_pager) == null) {
+                val fragment = ShopActivityPagerFragment.newInstance(0)
+                fragmentManager.beginTransaction()
+                        .add(R.id.fragment_sections_pager, fragment)
+                        .commit()
+            }
+        }
     }
 
     fun setupMap() {

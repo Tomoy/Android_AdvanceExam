@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Domain</string>
+    <string name="section_shops">Shops</string>
+    <string name="section_activities">Activities</string>
 </resources>
