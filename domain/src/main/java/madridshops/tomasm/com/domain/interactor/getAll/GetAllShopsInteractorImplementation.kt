@@ -1,4 +1,4 @@
-package madridshops.tomasm.com.domain.interactor.getAllShops
+package madridshops.tomasm.com.domain.interactor.getAll
 
 import android.content.Context
 import android.util.Log
@@ -7,17 +7,17 @@ import madridshops.tomasm.com.domain.interactor.SuccessCompletion
 import madridshops.tomasm.com.domain.model.Shop
 import madridshops.tomasm.com.domain.model.Shops
 import madridshops.tomasm.com.repository.Repository
-import madridshops.tomasm.com.repository.RepositoryImplementation
+import madridshops.tomasm.com.repository.RepositoryShopsImplementation
 import madridshops.tomasm.com.repository.db.model.ShopEntity
 import java.lang.ref.WeakReference
 
-class GetAllShopsInteractorImplementation(context: Context) : GetAllShopsInteractor {
+class GetAllShopsInteractorImplementation(context: Context) : GetAllInteractor<Shops> {
 
     private val weakContext = WeakReference<Context>(context)
-    private val repository: Repository = RepositoryImplementation(weakContext.get()!!)
+    private val repository: Repository<ShopEntity> = RepositoryShopsImplementation(weakContext.get()!!)
 
     override fun execute(success: SuccessCompletion<Shops>, error: ErrorCompletion) {
-        repository.getAllShops(success = {
+        repository.getAll(success = {
             //Mapear los shopsEntity que recibimos del repositorio a Shops
             val shops: Shops = mapEntityToShops(it)
             success.successCompletion(shops)

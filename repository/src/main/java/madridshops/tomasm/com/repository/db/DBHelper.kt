@@ -3,6 +3,7 @@ package madridshops.tomasm.com.repository.db
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import madridACTIVITYs.tomasm.com.repository.db.ActivityDBConstants
 
 //Internal porque todas estas clases o funciones, se acceden solo internamente en el módulo
 internal fun build(context: Context, name: String, version: Int): DBHelper {
@@ -24,7 +25,8 @@ internal class DBHelper(context: Context?, name: String?, factory: SQLiteDatabas
     //Recibo una conexión a la database en db
     override fun onCreate(db: SQLiteDatabase?) {
         //Le digo a la db que ejecuto el código SQL de cada elemento en el array CREATE_DATABASE_SCRIPTS
-        DBConstants.CREATE_DATABASE_SCRIPTS.forEach { db?.execSQL(it) }
+        ShopDBConstants.CREATE_DATABASE_SCRIPTS.forEach { db?.execSQL(it)}
+        ActivityDBConstants.CREATE_DATABASE_SCRIPTS.forEach { db?.execSQL(it)}
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

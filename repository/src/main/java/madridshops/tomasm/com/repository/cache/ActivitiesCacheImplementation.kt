@@ -3,24 +3,25 @@ package madridshops.tomasm.com.repository.cache
 import android.content.Context
 import madridshops.tomasm.com.repository.db.DBHelper
 import madridshops.tomasm.com.repository.db.build
+import madridshops.tomasm.com.repository.db.dao.ActivityDAO
 import madridshops.tomasm.com.repository.db.dao.ShopDAO
-import madridshops.tomasm.com.repository.db.model.ShopEntity
+import madridshops.tomasm.com.repository.db.model.ActivityEntity
 import madridshops.tomasm.com.repository.thread.DispatchOnMainThread
 import java.lang.ref.WeakReference
 
-internal class CacheImplementation(context:Context): Cache {
+internal class ActivitiesCacheImplementation(context:Context): Cache<ActivityEntity> {
 
     val context = WeakReference<Context>(context)
 
-    override fun getAllShops(success: (shops: List<ShopEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
+    override fun getAll(success: (items: List<ActivityEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
         //Hacerlo en segundo plano (background thread) porque va a tardar
         Thread(Runnable {
-            val shopsList = ShopDAO(cacheDBHelper()).query()
+            val activitiesList = ActivityDAO(cacheDBHelper()).query()
 
             //Estas llamadas tienen que volver por el hilo principal, uso mi clase auxiliar para ejecutar el código en el MainThread
             DispatchOnMainThread(Runnable {
-                if (shopsList.count() > 0) {
-                    success(shopsList)
+                if (activitiesList.count() > 0) {
+                    success(activitiesList)
                 } else {
                     error("No Shops available")
                 }
@@ -29,19 +30,16 @@ internal class CacheImplementation(context:Context): Cache {
         }).run()
     }
 
-    override fun saveAllShops(shops: List<ShopEntity>, success: () -> Unit, error: (errorMessage: String) -> Unit) {
-        //Hacerlo en segundo plano (background thread) porque va a tardar
+    override fun saveAll(items: List<ActivityEntity>, success: () -> Unit, error: (errorMessage: String) -> Unit) {
         Thread(Runnable {
 
             try {
-                shops.forEach { ShopDAO(cacheDBHelper()).insert(it) }
-                //Estas llamadas tienen que volver por el hilo principal, uso mi clase auxiliar para ejecutar el código en el MainThread
+                items.forEach { ActivityDAO(cacheDBHelper()).insert(it) }
                 DispatchOnMainThread(Runnable {
                     success()
                 })
             } catch (e: Exception) {
 
-                //Estas llamadas tienen que volver por el hilo principal, uso mi clase auxiliar para ejecutar el código en el MainThread
                 DispatchOnMainThread(Runnable {
                     error("Error saving shops: " + e.message)
                 })
@@ -51,13 +49,11 @@ internal class CacheImplementation(context:Context): Cache {
         }).run()
     }
 
-    override fun deleteAllShops(success: () -> Unit, error: (errorMessage: String) -> Unit) {
-        //En este caso se le dice a la db que elimine todos los shops pero la implementación podría ser otra, local o archivo etc
-        //Hacerlo en segundo plano (background thread) porque va a tardar
+    override fun deleteAll(success: () -> Unit, error: (errorMessage: String) -> Unit) {
+
         Thread(Runnable {
             val deletionSuccess = ShopDAO(cacheDBHelper()).deleteAll()
 
-            //Estas llamadas tienen que volver por el hilo principal, uso mi clase auxiliar para ejecutar el código en el MainThread
             DispatchOnMainThread(Runnable {
                 if (deletionSuccess) {
                     success()

@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tomasm.madridshops.fragment.ListFragment">
+    tools:context="com.tomasm.madridshops.fragment.ActivityListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:background="@color/colorPrimaryDark"
-        android:id="@+id/items_list"
+        android:id="@+id/activity_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

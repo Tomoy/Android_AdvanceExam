@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import madridshops.tomasm.com.repository.cache.Cache
-import madridshops.tomasm.com.repository.cache.CacheImplementation
+import madridshops.tomasm.com.repository.cache.ShopsCacheImplementation
 import madridshops.tomasm.com.repository.db.model.ShopEntity
 import madridshops.tomasm.com.repository.db.model.ShopsResponseEntity
 import madridshops.tomasm.com.repository.network.NetworkingInterface
@@ -12,22 +12,26 @@ import madridshops.tomasm.com.repository.network.NetworkingVolley
 import madridshops.tomasm.com.repository.network.json.JSONEntitiesParser
 import java.lang.ref.WeakReference
 
-class RepositoryImplementation(context: Context): Repository {
+class RepositoryShopsImplementation(context: Context): Repository<ShopEntity> {
 
-    private val weakContext = WeakReference<Context>(context)
-    private val cache: Cache = CacheImplementation(weakContext.get()!!)
-
-    override fun getAllShops(success: (shops: List<ShopEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
+    override fun getAll(success: (items: List<ShopEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
         //read all shops from cache
-        cache.getAllShops(
+        cache.getAll(
                 success = {
                     //If there are shops in cache -> return them
                     success(it)
                 }, error = {
-                    //if there are no shops in cache -> Network request
-                    populateCache(success, error)
-                })
+            //if there are no shops in cache -> Network request
+            populateCache(success, error)
+        })
     }
+
+    override fun deleteAll(success: () -> Unit, error: (errorMessage: String) -> Unit) {
+        cache.deleteAll(success, error)
+    }
+
+    private val weakContext = WeakReference<Context>(context)
+    private val cache: Cache<ShopEntity> = ShopsCacheImplementation(weakContext.get()!!)
 
     private fun populateCache(success: (shops: List<ShopEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
         //Perform network request
@@ -47,7 +51,7 @@ class RepositoryImplementation(context: Context): Repository {
                 }
 
                 //Store result in cache
-                cache.saveAllShops(responseEntity.result, success = {
+                cache.saveAll(responseEntity.result, success = {
                     success(responseEntity.result)
                 }, error = {
                     error("There was a problem while saving the shops")
@@ -62,9 +66,5 @@ class RepositoryImplementation(context: Context): Repository {
         })
 
 
-    }
-
-    override fun deleteAllShops(success: () -> Unit, error: (errorMessage: String) -> Unit) {
-        cache.deleteAllShops(success, error)
     }
 }

@@ -3,9 +3,8 @@ package madridshops.tomasm.com.repository.db.dao
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import madridshops.tomasm.com.repository.db.DBConstants
+import madridshops.tomasm.com.repository.db.ShopDBConstants
 import madridshops.tomasm.com.repository.db.DBHelper
-import madridshops.tomasm.com.repository.db.convert
 import madridshops.tomasm.com.repository.db.model.ShopEntity
 
 internal class ShopDAO
@@ -20,7 +19,7 @@ internal class ShopDAO
     override fun insert(shopEntity: ShopEntity): Long {
         var id: Long = -1
 
-        id = dbReadWriteConnection.insert(DBConstants.TABLE_SHOP, null, getContentValuesFrom(shopEntity))
+        id = dbReadWriteConnection.insert(ShopDBConstants.TABLE_SHOP, null, getContentValuesFrom(shopEntity))
 
         return id
     }
@@ -29,24 +28,24 @@ internal class ShopDAO
     fun getContentValuesFrom(shopEntity: ShopEntity): ContentValues {
         val content = ContentValues()
 
-        content.put(DBConstants.KEY_SHOP_ID_JSON, shopEntity.id)
-        content.put(DBConstants.KEY_SHOP_NAME, shopEntity.name)
-        content.put(DBConstants.KEY_SHOP_DESCRIPTION, shopEntity.description)
-        content.put(DBConstants.KEY_SHOP_LATITUDE, shopEntity.latitude)
-        content.put(DBConstants.KEY_SHOP_LONGITUDE, shopEntity.longitude)
-        content.put(DBConstants.KEY_SHOP_IMAGE_URL, shopEntity.img)
-        content.put(DBConstants.KEY_SHOP_LOGO_IMAGE_URL, shopEntity.logo_img)
-        content.put(DBConstants.KEY_SHOP_ADDRESS, shopEntity.address)
-        content.put(DBConstants.KEY_SHOP_OPENING_HOURS, shopEntity.opening_hours_en)
+        content.put(ShopDBConstants.KEY_SHOP_ID_JSON, shopEntity.id)
+        content.put(ShopDBConstants.KEY_SHOP_NAME, shopEntity.name)
+        content.put(ShopDBConstants.KEY_SHOP_DESCRIPTION, shopEntity.description)
+        content.put(ShopDBConstants.KEY_SHOP_LATITUDE, shopEntity.latitude)
+        content.put(ShopDBConstants.KEY_SHOP_LONGITUDE, shopEntity.longitude)
+        content.put(ShopDBConstants.KEY_SHOP_IMAGE_URL, shopEntity.img)
+        content.put(ShopDBConstants.KEY_SHOP_LOGO_IMAGE_URL, shopEntity.logo_img)
+        content.put(ShopDBConstants.KEY_SHOP_ADDRESS, shopEntity.address)
+        content.put(ShopDBConstants.KEY_SHOP_OPENING_HOURS, shopEntity.opening_hours_en)
 
         return content
     }
 
     override fun update(id: Long, shopEntity: ShopEntity): Long {
 
-        val numberOfRecordsUpdated = dbReadWriteConnection.update(DBConstants.TABLE_SHOP,
+        val numberOfRecordsUpdated = dbReadWriteConnection.update(ShopDBConstants.TABLE_SHOP,
                  getContentValuesFrom(shopEntity) ,
-                 DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
+                 ShopDBConstants.KEY_SHOP_DATABASE_ID + " = ?",
                  arrayOf(id.toString()))   //Que actualice la tabla shop donde el id sea este y los valores a actualizar los del content value
          return numberOfRecordsUpdated.toLong()
     }
@@ -58,14 +57,14 @@ internal class ShopDAO
     override fun delete(id: Long): Long {
 
         return dbReadWriteConnection.delete(
-                DBConstants.TABLE_SHOP,
-                DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
+                ShopDBConstants.TABLE_SHOP,
+                ShopDBConstants.KEY_SHOP_DATABASE_ID + " = ?",
                 arrayOf(id.toString())).toLong()
     }
 
     override fun deleteAll(): Boolean {
         return dbReadWriteConnection.delete(
-                DBConstants.TABLE_SHOP,
+                ShopDBConstants.TABLE_SHOP,
                 null,
                 null
         ).toLong() >= 0  //Si estaba vacia o habia mas de un registro, ha ido bien
@@ -83,13 +82,13 @@ internal class ShopDAO
         val queryResult = ArrayList<ShopEntity>()
 
         val cursor = dbReadOnlyConnection.query(
-                DBConstants.TABLE_SHOP,
-                DBConstants.ALL_COLUMNS,
+                ShopDBConstants.TABLE_SHOP,
+                ShopDBConstants.ALL_COLUMNS,
                 null,
                 null,
                 "",
                 "",
-                DBConstants.KEY_SHOP_DATABASE_ID)
+                ShopDBConstants.KEY_SHOP_DATABASE_ID)
 
         while (cursor.moveToNext()) {
             queryResult.add(getEntityFromCursor(cursor)!!)
@@ -105,29 +104,29 @@ internal class ShopDAO
         }
 
         return ShopEntity(
-                cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_ID_JSON)),
-                cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_DATABASE_ID)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_NAME)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_DESCRIPTION)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_LATITUDE)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_LONGITUDE)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_IMAGE_URL)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_LOGO_IMAGE_URL)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_OPENING_HOURS)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_ADDRESS))
+                cursor.getLong(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_ID_JSON)),
+                cursor.getLong(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_DATABASE_ID)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_NAME)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_DESCRIPTION)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_LATITUDE)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_LONGITUDE)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_IMAGE_URL)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_LOGO_IMAGE_URL)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_OPENING_HOURS)),
+                cursor.getString(cursor.getColumnIndex(ShopDBConstants.KEY_SHOP_ADDRESS))
         )
     }
 
     override fun queryCursor(id: Long): Cursor {
 
         val cursor = dbReadOnlyConnection.query(
-                DBConstants.TABLE_SHOP,
-                DBConstants.ALL_COLUMNS,
-                DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
+                ShopDBConstants.TABLE_SHOP,
+                ShopDBConstants.ALL_COLUMNS,
+                ShopDBConstants.KEY_SHOP_DATABASE_ID + " = ?",
                 arrayOf(id.toString()),
                 "",
                 "",
-                DBConstants.KEY_SHOP_DATABASE_ID //Order
+                ShopDBConstants.KEY_SHOP_DATABASE_ID //Order
         )
 
         return cursor

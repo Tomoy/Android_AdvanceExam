@@ -43,7 +43,7 @@ class ShopActivityPagerFragment : Fragment() {
             initialIndex = arguments?.getInt(ARG_INITIAL_INDEX) ?: 0
 
             val adapter = object: FragmentPagerAdapter(fragmentManager) {
-                override fun getItem(position: Int) = SectionFragment.newInstance(Sections[position])
+                override fun getItem(position: Int) = BaseSectionFragment.newInstance(Sections[position])
 
                 override fun getCount() = Sections.count
 

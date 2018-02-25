@@ -32,7 +32,7 @@
             >
 
             <TextView
-                android:id="@+id/shop_name_textView"
+                android:id="@+id/item_name_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -43,12 +43,12 @@
                 tools:text="@string/shop_name_default"/>
 
             <TextView
-                android:id="@+id/shop_description_textView"
+                android:id="@+id/item_description_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textSize="@dimen/font_size_medium"
-                android:layout_below="@id/shop_name_textView"
+                android:layout_below="@id/item_name_textView"
                 android:layout_marginTop="@dimen/small_margin"
                 tools:text="@string/shop_description_default"/>
 
@@ -57,7 +57,7 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/shop_address_textView"
+        android:id="@+id/item_address_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"

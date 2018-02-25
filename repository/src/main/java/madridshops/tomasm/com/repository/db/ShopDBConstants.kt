@@ -1,6 +1,6 @@
 package madridshops.tomasm.com.repository.db
 
-object DBConstants {
+object ShopDBConstants {
 
     val TABLE_SHOP = "SHOP"
 

@@ -2,9 +2,9 @@ package madridshops.tomasm.com.domain.model
 
 import java.io.Serializable
 
-data class Shop(val id: Int, val name: String, val address: String,
-                val description: String, val lat: Double, val lon: Double, val imgUrl:String,
-                val logoImgUrl: String, val openingHours: String) : Serializable
+data class Shop(val id: Int, override val name: String, override val address: String,
+                override val description: String, override val lat: Double, override val lon: Double, val imgUrl:String,
+                val logoImgUrl: String, val openingHours: String) : Item
 
 data class Shops(var shops: MutableList<Shop>): AggregateInterface<Shop>, Serializable {
 
